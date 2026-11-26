@@ -44,12 +44,16 @@ class JdbcLobUtilsTest {
   }
 
   @Test
-  void shouldIgnoreUnsupportedFreeAfterSuccessfulRead() throws SQLException {
-    String result = JdbcLobUtils.readAndFree(() -> "value", () -> {
-      throw new SQLFeatureNotSupportedException("free not supported");
-    });
+  void shouldPropagateUnsupportedFreeAfterSuccessfulRead() {
+    SQLFeatureNotSupportedException freeException =
+        new SQLFeatureNotSupportedException("free not supported");
 
-    assertEquals("value", result);
+    SQLFeatureNotSupportedException actual = assertThrows(SQLFeatureNotSupportedException.class,
+        () -> JdbcLobUtils.readAndFree(() -> "value", () -> {
+          throw freeException;
+        }));
+
+    assertSame(freeException, actual);
   }
 
   @Test
