@@ -53,10 +53,7 @@ public class BlobByteObjectArrayTypeHandler extends BaseTypeHandler<Byte[]> {
   }
 
   private Byte[] getBytes(Blob blob) throws SQLException {
-    Byte[] returnValue = null;
-    if (blob != null) {
-      returnValue = ByteArrayUtils.convertToObjectArray(blob.getBytes(1, (int) blob.length()));
-    }
-    return returnValue;
+    return blob == null ? null : JdbcLobUtils.readAndFree(
+        () -> ByteArrayUtils.convertToObjectArray(blob.getBytes(1, (int) blob.length())), blob::free);
   }
 }
