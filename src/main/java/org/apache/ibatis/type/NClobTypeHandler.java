@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -54,7 +54,8 @@ public class NClobTypeHandler extends BaseTypeHandler<String> {
   }
 
   private String toString(NClob nclob) throws SQLException {
-    return nclob == null ? null : nclob.getSubString(1, (int) nclob.length());
+    return nclob == null ? null
+        : JdbcLobUtils.readAndFree(() -> nclob.getSubString(1, (int) nclob.length()), nclob::free);
   }
 
 }
