@@ -16,7 +16,6 @@
 package org.apache.ibatis.type;
 
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 
 /**
  * Utility methods for eagerly materializing JDBC LOB values.
@@ -40,11 +39,7 @@ final class JdbcLobUtils {
       }
       throw e;
     }
-    try {
-      free.run();
-    } catch (SQLFeatureNotSupportedException ignored) {
-      // Some JDBC drivers do not support freeing LOBs explicitly.
-    }
+    free.run();
     return value;
   }
 
