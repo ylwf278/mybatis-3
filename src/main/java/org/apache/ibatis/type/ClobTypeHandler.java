@@ -54,7 +54,8 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
   }
 
   private String toString(Clob clob) throws SQLException {
-    return clob == null ? null : clob.getSubString(1, (int) clob.length());
+    return clob == null ? null
+        : JdbcLobUtils.readAndFree(() -> clob.getSubString(1, (int) clob.length()), clob::free);
   }
 
 }
